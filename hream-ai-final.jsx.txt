@@ -1,0 +1,243 @@
+import { useState } from "react";
+
+export default function HreamAI() {
+  const [mode, setMode] = useState("app");
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const modePrompts = {
+    app: `You are an expert app developer. The user wants to build an app. Generate complete, working code with comments. User request: `,
+    web: `You are an expert web developer. Generate a complete beautiful HTML+CSS+JS single file website. User request: `,
+    doubt: `You are a friendly coding teacher. Answer this coding question simply with code examples. Question: `,
+  };
+
+  const modeColors = {
+    app: "#e11d48",
+    web: "#7c3aed",
+    doubt: "#ea580c",
+  };
+
+  const examples = {
+    app: ["Simple calculator", "To-do list", "Quiz app", "Timer app"],
+    web: ["Portfolio website", "Restaurant page", "Login page", "Product landing page"],
+    doubt: ["What is a for loop?", "What is an API?", "How does recursion work?", "What is a variable?"],
+  };
+
+  const handleGenerate = async () => {
+    if (!input.trim()) {
+      setError("Please type something first!");
+      return;
+    }
+    setError("");
+    setOutput("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [
+            {
+              role: "user",
+              content: modePrompts[mode] + input,
+            },
+          ],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data && data.content && data.content.length > 0) {
+        const text = data.content.map((block) => block.text || "").join("");
+        setOutput(text);
+      } else {
+        setError("No response received. Please try again.");
+      }
+    } catch (err) {
+      setError("Something went wrong: " + err.message);
+    }
+
+    setLoading(false);
+  };
+
+  const color = modeColors[mode];
+
+  return (
+    <div style={{ background: "#ffffff", minHeight: "100vh", fontFamily: "Arial, sans-serif", color: "#111" }}>
+      
+      {/* TOP BAR */}
+      <div style={{ background: color, padding: "20px", textAlign: "center" }}>
+        <h1 style={{ color: "white", margin: 0, fontSize: "2rem" }}>🧠 Hream AI</h1>
+        <p style={{ color: "white", margin: "6px 0 0", opacity: 0.9 }}>
+          Build Apps · Create Websites · Solve Code Doubts
+        </p>
+      </div>
+
+      <div style={{ maxWidth: "700px", margin: "0 auto", padding: "24px 16px" }}>
+
+        {/* MODE BUTTONS */}
+        <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+          {["app", "web", "doubt"].map((m) => (
+            <button
+              key={m}
+              onClick={() => { setMode(m); setInput(""); setOutput(""); setError(""); }}
+              style={{
+                flex: 1,
+                padding: "12px",
+                borderRadius: "10px",
+                border: "2px solid " + modeColors[m],
+                background: mode === m ? modeColors[m] : "white",
+                color: mode === m ? "white" : modeColors[m],
+                fontWeight: "bold",
+                fontSize: "0.95rem",
+                cursor: "pointer",
+              }}
+            >
+              {m === "app" ? "📱 Make App" : m === "web" ? "🌐 Website" : "❓ Code Doubt"}
+            </button>
+          ))}
+        </div>
+
+        {/* EXAMPLES */}
+        <div style={{ marginBottom: "16px" }}>
+          <p style={{ margin: "0 0 8px", fontWeight: "bold", color: "#555", fontSize: "0.85rem" }}>
+            💡 Click an example:
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {examples[mode].map((ex) => (
+              <button
+                key={ex}
+                onClick={() => setInput(ex)}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "999px",
+                  border: "1.5px solid " + color,
+                  background: "white",
+                  color: color,
+                  fontWeight: "bold",
+                  fontSize: "0.82rem",
+                  cursor: "pointer",
+                }}
+              >
+                {ex}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* TEXT INPUT */}
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={
+            mode === "app" ? "Describe the app you want to build..."
+            : mode === "web" ? "Describe the website you want..."
+            : "Type your coding question here..."
+          }
+          rows={4}
+          style={{
+            width: "100%",
+            padding: "14px",
+            borderRadius: "12px",
+            border: "2px solid " + color,
+            fontSize: "1rem",
+            fontFamily: "Arial, sans-serif",
+            resize: "vertical",
+            outline: "none",
+            boxSizing: "border-box",
+            marginBottom: "12px",
+            color: "#111",
+          }}
+        />
+
+        {/* ERROR */}
+        {error && (
+          <div style={{ background: "#fee2e2", color: "#b91c1c", padding: "10px 14px", borderRadius: "8px", marginBottom: "12px", fontWeight: "bold" }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* GENERATE BUTTON */}
+        <button
+          onClick={handleGenerate}
+          disabled={loading}
+          style={{
+            width: "100%",
+            padding: "14px",
+            borderRadius: "12px",
+            border: "none",
+            background: loading ? "#aaa" : color,
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "1.1rem",
+            cursor: loading ? "not-allowed" : "pointer",
+            marginBottom: "20px",
+          }}
+        >
+          {loading ? "⏳ Hream AI is writing your code..." : "✨ Generate Code"}
+        </button>
+
+        {/* OUTPUT */}
+        {output && (
+          <div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+              <strong style={{ color: "#16a34a", fontSize: "1.05rem" }}>✅ Code is Ready!</strong>
+              <div style={{ display: "flex", gap: "8px" }}>
+                <button
+                  onClick={() => { navigator.clipboard.writeText(output); }}
+                  style={{
+                    padding: "6px 14px", borderRadius: "8px",
+                    border: "1.5px solid #ddd", background: "white",
+                    fontWeight: "bold", cursor: "pointer", fontSize: "0.85rem",
+                  }}
+                >📋 Copy</button>
+                <button
+                  onClick={() => {
+                    const ext = mode === "web" ? "html" : "txt";
+                    const blob = new Blob([output], { type: "text/plain" });
+                    const a = document.createElement("a");
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `hream-ai.${ext}`;
+                    a.click();
+                  }}
+                  style={{
+                    padding: "6px 14px", borderRadius: "8px",
+                    border: "1.5px solid #ddd", background: "white",
+                    fontWeight: "bold", cursor: "pointer", fontSize: "0.85rem",
+                  }}
+                >⬇️ Download</button>
+              </div>
+            </div>
+            <pre style={{
+              background: "#1e1e2e",
+              color: "#cdd6f4",
+              padding: "16px",
+              borderRadius: "12px",
+              fontSize: "0.87rem",
+              lineHeight: 1.7,
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              overflowY: "auto",
+              maxHeight: "450px",
+              fontFamily: "monospace",
+            }}>
+              {output}
+            </pre>
+          </div>
+        )}
+      </div>
+
+      {/* FOOTER */}
+      <div style={{ textAlign: "center", padding: "20px", color: "#999", fontSize: "0.85rem" }}>
+        Made with 💖 by <strong style={{ color }}>Hream AI</strong>
+      </div>
+    </div>
+  );
+}
