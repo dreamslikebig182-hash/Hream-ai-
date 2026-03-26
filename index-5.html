@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hream AI – Build Anything With Code</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f8f9ff; color: #111; }
+
+    .header {
+      background: linear-gradient(135deg, #7c3aed, #ff4dac);
+      padding: 28px 16px; text-align: center; color: white;
+    }
+    .header h1 { font-size: 2.4rem; font-weight: 900; }
+    .header p { margin-top: 8px; opacity: 0.9; font-size: 1rem; }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white; font-size: 0.78rem; font-weight: 800;
+      padding: 4px 14px; border-radius: 999px;
+      margin-top: 10px; letter-spacing: 1px;
+    }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
+
+    /* HOW IT WORKS */
+    .how-it-works {
+      background: white; border-radius: 16px;
+      padding: 20px; margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-left: 4px solid #7c3aed;
+    }
+    .how-it-works h2 { color: #7c3aed; font-size: 1rem; margin-bottom: 12px; }
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    .step { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+    .step-num {
+      background: linear-gradient(135deg, #7c3aed, #ff4dac);
+      color: white; width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 900; font-size: 0.85rem; flex-shrink: 0;
+    }
+
+    /* CATEGORY GRID */
+    .section-title {
+      font-size: 1rem; font-weight: 800; color: #555;
+      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .category-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px; margin-bottom: 24px;
+    }
+    .cat-btn {
+      padding: 14px 10px; border-radius: 14px; border: 2px solid #e5e7eb;
+      background: white; cursor: pointer; text-align: center;
+      font-weight: 700; font-size: 0.88rem; transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      line-height: 1.4;
+    }
+    .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .cat-btn.selected { color: white; border-color: transparent; }
+    .cat-btn .cat-icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+
+    /* EXAMPLES */
+    .examples-section { margin-bottom: 20px; display: none; }
+    .examples-section.visible { display: block; }
+    .examples-title { font-size: 0.85rem; font-weight: 700; color: #666; margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 6px 14px; border-radius: 999px;
+      border: 1.5px solid #7c3aed; background: white;
+      color: #7c3aed; font-weight: 700; font-size: 0.82rem; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chip:hover { background: #7c3aed; color: white; }
+
+    /* FORM */
+    .form-card {
+      background: white; border-radius: 16px;
+      padding: 20px; margin-bottom: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      display: none;
+    }
+    .form-card.visible { display: block; }
+    .form-label { font-weight: 800; font-size: 0.85rem; color: #7c3aed; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea {
+      width: 100%; padding: 14px; border-radius: 12px;
+      border: 2px solid #e5e7eb; font-size: 1rem;
+      font-family: Arial, sans-serif; resize: vertical;
+      outline: none; margin-bottom: 14px; color: #111; transition: border 0.2s;
+    }
+    textarea:focus { border-color: #7c3aed; }
+    input[type="text"] {
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 2px solid #e5e7eb; font-size: 1rem;
+      font-family: Arial, sans-serif; outline: none; color: #111; transition: border 0.2s;
+    }
+    input[type="text"]:focus { border-color: #25d366; }
+    .input-label { font-weight: 700; font-size: 0.85rem; color: #555; margin-bottom: 6px; display: block; margin-top: 14px; }
+
+    .price-box {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 1.5px solid #86efac; border-radius: 12px;
+      padding: 12px 16px; margin: 14px 0;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .price { font-size: 1.3rem; font-weight: 900; color: #16a34a; }
+    .price-desc { font-size: 0.85rem; color: #166534; }
+
+    .btn-whatsapp {
+      width: 100%; padding: 16px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: white; font-weight: 900; font-size: 1.1rem;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 10px;
+      box-shadow: 0 4px 16px rgba(37,211,102,0.4); transition: transform 0.2s;
+    }
+    .btn-whatsapp:hover { transform: scale(1.02); }
+
+    .success-box {
+      background: #f0fdf4; border: 2px solid #86efac;
+      border-radius: 14px; padding: 20px; margin-top: 20px;
+      text-align: center; display: none;
+    }
+    .success-box h3 { color: #16a34a; font-size: 1.2rem; margin-bottom: 8px; }
+    .success-box p { color: #166534; font-size: 0.95rem; line-height: 1.6; }
+
+    /* PRICING */
+    .pricing {
+      background: white; border-radius: 16px;
+      padding: 20px; margin-top: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .pricing h2 { font-size: 1.1rem; margin-bottom: 14px; color: #111; }
+    .price-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-size: 0.95rem;
+    }
+    .price-row:last-child { border-bottom: none; }
+    .price-tag { background: #7c3aed; color: white; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.85rem; }
+
+    .error { background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-weight: 700; display: none; }
+
+    footer { text-align: center; padding: 28px 16px; color: #999; font-size: 0.85rem; margin-top: 20px; }
+    footer span { color: #7c3aed; font-weight: 800; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🧠 Hream AI</h1>
+  <p>Build Anything With Code — Apps, Websites, Games & More!</p>
+  <div class="badge">⚡ Get Your Code in Minutes via WhatsApp!</div>
+</div>
+
+<div class="container">
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <h2>⚡ How It Works</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><span>Choose a category below</span></div>
+      <div class="step"><div class="step-num">2</div><span>Describe what you want</span></div>
+      <div class="step"><div class="step-num">3</div><span>Send request via WhatsApp</span></div>
+      <div class="step"><div class="step-num">4</div><span>Receive your code in minutes! 🚀</span></div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="section-title">🗂️ Choose a Category</div>
+  <div class="category-grid" id="category-grid"></div>
+
+  <!-- EXAMPLES -->
+  <div class="examples-section" id="examples-section">
+    <div class="examples-title">💡 Click an example or write your own:</div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card" id="form-card">
+    <label class="form-label" id="form-label">Describe what you want</label>
+    <textarea id="user-input" rows="4" placeholder="Describe what you want..."></textarea>
+    <label class="input-label">📱 Your WhatsApp Number</label>
+    <input type="text" id="phone" placeholder="e.g. 9876543210" maxlength="10"/>
+    <div class="price-box">
+      <div class="price" id="price-display">₹99</div>
+      <div class="price-desc">One time payment after<br>you receive your code ✅</div>
+    </div>
+    <div class="error" id="error-box"></div>
+    <button class="btn-whatsapp" onclick="sendWhatsApp()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Send Request on WhatsApp
+    </button>
+    <div class="success-box" id="success-box">
+      <h3>✅ Request Sent!</h3>
+      <p>Your request has been sent on WhatsApp!<br>You will receive your code very soon. 🚀<br><br>Pay only after you receive your code! 💚</p>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="pricing">
+    <h2>💰 Simple Pricing</h2>
+    <div class="price-row"><span>📱 App / 🌐 Website / 🎮 Game Code</span><span class="price-tag">₹99</span></div>
+    <div class="price-row"><span>🤖 AI / ML Code</span><span class="price-tag">₹149</span></div>
+    <div class="price-row"><span>❓ Code Doubt / Help</span><span class="price-tag">₹49</span></div>
+    <div class="price-row"><span>⚡ Delivery Time</span><span style="color:#16a34a;font-weight:800;">5-10 Minutes</span></div>
+    <div class="price-row"><span>💚 Pay When</span><span style="color:#16a34a;font-weight:800;">After receiving code</span></div>
+  </div>
+
+</div>
+
+<footer>Made with 💖 by <span>Hream AI</span> · Build anything, no coding needed!</footer>
+
+<script>
+  var YOUR_WHATSAPP = '919961619440';
+  var selectedCategory = null;
+
+  var categories = [
+    { id: 'app', icon: '📱', label: 'App Development', color: '#e11d48', price: '₹99',
+      examples: ['Calculator app','Quiz app','To-do list','Login screen','Weather app','Expense tracker','Stopwatch','Notes app','BMI calculator','Alarm clock','Flashcard app','Currency converter'] },
+    { id: 'web', icon: '🌐', label: 'Website', color: '#7c3aed', price: '₹99',
+      examples: ['Portfolio website','Restaurant page','Blog homepage','Wedding invitation','Resume website','Gym website','Photography portfolio','Event page','Real estate page','Tuition center','Fashion store','News website'] },
+    { id: 'game', icon: '🎮', label: 'Game Dev', color: '#0891b2', price: '₹99',
+      examples: ['Snake game','Tic tac toe','Memory card game','Flappy bird clone','Whack a mole','Rock paper scissors','Maze game','Ping pong game'] },
+    { id: 'ai', icon: '🤖', label: 'AI & ML', color: '#7c3aed', price: '₹149',
+      examples: ['Chatbot','Image classifier','Sentiment analysis','Face detection','Spam detector','Price predictor','Recommendation system','Voice assistant'] },
+    { id: 'data', icon: '📊', label: 'Data Science', color: '#0284c7', price: '₹99',
+      examples: ['Data visualization','CSV analyzer','Sales dashboard','Student marks analysis','Stock price chart','Population data chart','Weather data analysis'] },
+    { id: 'android', icon: '🤖', label: 'Android App', color: '#3d8b00', price: '₹99',
+      examples: ['Simple Android calculator','Android to-do app','Android quiz app','Android login screen','Android weather app','Android notes app'] },
+    { id: 'flutter', icon: '💙', label: 'Flutter App', color: '#0468d7', price: '₹99',
+      examples: ['Flutter calculator','Flutter login UI','Flutter todo app','Flutter weather app','Flutter e-commerce UI','Flutter onboarding screen'] },
+    { id: 'python', icon: '🐍', label: 'Python', color: '#306998', price: '₹99',
+      examples: ['Python calculator','Web scraper','File organizer','Password manager','Email sender','Alarm clock','Number guessing game','Todo CLI app'] },
+    { id: 'database', icon: '🗄️', label: 'Database', color: '#f59e0b', price: '₹99',
+      examples: ['Student database','Employee management','Library system','Inventory system','Hospital database','School database'] },
+    { id: 'security', icon: '🔒', label: 'Cybersecurity', color: '#dc2626', price: '₹99',
+      examples: ['Password strength checker','Password generator','Simple encryption','Hash generator','Login system with security','OTP generator'] },
+    { id: 'cloud', icon: '☁️', label: 'Cloud & API', color: '#0ea5e9', price: '₹99',
+      examples: ['REST API','Firebase integration','Weather API app','Google Maps integration','Payment gateway','SMS sender API'] },
+    { id: 'doubt', icon: '❓', label: 'Code Doubt', color: '#ea580c', price: '₹49',
+      examples: ['What is a for loop?','What is an API?','Difference == and ===','What is recursion?','What is HTML and CSS?','How to connect database?','What is Python?','What is Flutter?','How to use Firebase?','What is Git?','How to use arrays?','What is OOP?'] },
+  ];
+
+  // Build category grid
+  var grid = document.getElementById('category-grid');
+  categories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.id = 'cat-' + cat.id;
+    btn.innerHTML = '<span class="cat-icon">' + cat.icon + '</span>' + cat.label;
+    btn.onclick = function() { selectCategory(cat.id); };
+    grid.appendChild(btn);
+  });
+
+  function selectCategory(id) {
+    selectedCategory = id;
+    var cat = categories.find(function(c) { return c.id === id; });
+
+    // Update selected style
+    categories.forEach(function(c) {
+      var b = document.getElementById('cat-' + c.id);
+      b.className = 'cat-btn';
+      b.style.background = 'white';
+      b.style.color = '#111';
+    });
+    var selBtn = document.getElementById('cat-' + id);
+    selBtn.className = 'cat-btn selected';
+    selBtn.style.background = cat.color;
+    selBtn.style.color = 'white';
+
+    // Update examples
+    var chips = document.getElementById('chips');
+    chips.innerHTML = '';
+    cat.examples.forEach(function(ex) {
+      var btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.textContent = ex;
+      btn.style.borderColor = cat.color;
+      btn.style.color = cat.color;
+      btn.onclick = function() { document.getElementById('user-input').value = ex; };
+      chips.appendChild(btn);
+    });
+
+    // Update form
+    document.getElementById('form-label').textContent = cat.icon + ' Describe Your ' + cat.label + ' Request';
+    document.getElementById('price-display').textContent = cat.price;
+    document.getElementById('user-input').value = '';
+    document.getElementById('success-box').style.display = 'none';
+    document.getElementById('error-box').style.display = 'none';
+
+    document.getElementById('examples-section').className = 'examples-section visible';
+    document.getElementById('form-card').className = 'form-card visible';
+    document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function sendWhatsApp() {
+    var input = document.getElementById('user-input').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var errorBox = document.getElementById('error-box');
+    var cat = categories.find(function(c) { return c.id === selectedCategory; });
+
+    if (!input) { errorBox.textContent = '✏️ Please describe what you want!'; errorBox.style.display = 'block'; return; }
+    if (!phone || phone.length < 10) { errorBox.textContent = '📱 Please enter your WhatsApp number!'; errorBox.style.display = 'block'; return; }
+    errorBox.style.display = 'none';
+
+    var message = '🧠 *Hream AI Request*\n\n'
+      + '👤 Customer WhatsApp: ' + phone + '\n'
+      + '📌 Category: ' + cat.icon + ' ' + cat.label + '\n'
+      + '💰 Price: ' + cat.price + '\n\n'
+      + '📝 Request:\n' + input + '\n\n'
+      + '⚡ Please send the code as soon as possible!';
+
+    var waUrl = 'https://wa.me/' + YOUR_WHATSAPP + '?text=' + encodeURIComponent(message);
+    window.open(waUrl, '_blank');
+    document.getElementById('success-box').style.display = 'block';
+  }
+</script>
+</body>
+</html>
