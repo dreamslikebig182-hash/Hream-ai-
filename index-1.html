@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hream COD – Build Anything With Code</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f8f9ff; color: #111; }
+    .header {
+      background: linear-gradient(135deg, #7c3aed, #ff4dac);
+      padding: 28px 16px; text-align: center; color: white;
+    }
+    .header h1 { font-size: 2.2rem; font-weight: 900; }
+    .header p { margin-top: 6px; opacity: 0.9; font-size: 1rem; }
+    .badge {
+      display: inline-block; background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4); color: white;
+      font-size: 0.78rem; font-weight: 800; padding: 4px 14px;
+      border-radius: 999px; margin-top: 10px; letter-spacing: 1px;
+    }
+    .container { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
+    .section-title { font-size: 0.85rem; font-weight: 800; color: #555; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .cat-btn {
+      padding: 14px 8px; border-radius: 14px; border: 2px solid #e5e7eb;
+      background: white; cursor: pointer; text-align: center;
+      font-weight: 700; font-size: 0.82rem; transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .cat-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .cat-btn.active { color: white !important; border-color: transparent; }
+    .cat-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .examples { margin-bottom: 16px; }
+    .examples p { font-size: 0.85rem; font-weight: 700; color: #666; margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      padding: 6px 14px; border-radius: 999px; border: 1.5px solid #7c3aed;
+      background: white; color: #7c3aed; font-weight: 700; font-size: 0.82rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .chip:hover { background: #7c3aed; color: white; }
+    .form-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .form-label { font-weight: 800; font-size: 0.85rem; color: #7c3aed; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea {
+      width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #e5e7eb;
+      font-size: 1rem; font-family: Arial, sans-serif; resize: vertical;
+      outline: none; margin-bottom: 14px; color: #111; transition: border 0.2s;
+    }
+    textarea:focus { border-color: #7c3aed; }
+    .btn-generate {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #7c3aed, #ff4dac);
+      color: white; font-weight: 900; font-size: 1.1rem;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-generate:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
+    .btn-generate:disabled { background: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
+    .error { background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-weight: 700; display: none; }
+    .loading { text-align: center; padding: 20px; display: none; }
+    .loading-bar {
+      height: 4px; border-radius: 999px; margin: 0 auto 12px; max-width: 300px;
+      background: linear-gradient(90deg, #7c3aed, #ff4dac, #00e5ff, #7c3aed);
+      background-size: 300% 100%; animation: shimmer 1.5s linear infinite;
+    }
+    .loading p { color: #7c3aed; font-weight: 700; font-size: 1rem; }
+    @keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+    .output-section { margin-top: 20px; }
+    .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+    .output-title { color: #16a34a; font-weight: 900; font-size: 1.05rem; }
+    .output-actions { display: flex; gap: 8px; }
+    .btn-action { padding: 6px 14px; border-radius: 8px; border: 1.5px solid #ddd; background: white; font-weight: 700; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+    .btn-action:hover { border-color: #7c3aed; color: #7c3aed; }
+    pre {
+      background: #1e1e2e; color: #cdd6f4; padding: 16px; border-radius: 12px;
+      font-size: 0.87rem; line-height: 1.7; white-space: pre-wrap;
+      word-break: break-word; max-height: 500px; overflow-y: auto; font-family: monospace;
+    }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #16a34a; color: white; padding: 12px 20px; border-radius: 12px; font-weight: 700; font-size: 0.95rem; display: none; z-index: 999; }
+    footer { text-align: center; padding: 24px; color: #999; font-size: 0.85rem; margin-top: 20px; border-top: 1px solid #eee; }
+    footer span { color: #7c3aed; font-weight: 800; }
+    @media(max-width:480px) { .category-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🧠 Hream COD</h1>
+  <p>Build Anything With Code — Fully Automatic AI!</p>
+  <div class="badge">⚡ Instant Code — No Waiting — No Human Needed!</div>
+</div>
+
+<div class="container">
+  <div class="section-title">🗂️ Choose a Category</div>
+  <div class="category-grid" id="category-grid"></div>
+
+  <div class="examples" id="examples-section" style="display:none">
+    <p>💡 Click an example or write your own:</p>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="form-card" id="form-card" style="display:none">
+    <label class="form-label" id="form-label">Describe what you want</label>
+    <textarea id="user-input" rows="4" placeholder="Describe what you want..."></textarea>
+    <div class="error" id="error-box"></div>
+    <button class="btn-generate" id="gen-btn" onclick="generate()">✨ Generate Code Instantly</button>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-bar"></div>
+    <p>🤖 Hream COD AI is writing your code...</p>
+  </div>
+
+  <div class="output-section" id="output-section" style="display:none">
+    <div class="output-header">
+      <div class="output-title">✅ Your Code is Ready!</div>
+      <div class="output-actions">
+        <button class="btn-action" onclick="copyCode()">📋 Copy</button>
+        <button class="btn-action" onclick="downloadCode()">⬇️ Download</button>
+      </div>
+    </div>
+    <pre id="code-output"></pre>
+  </div>
+</div>
+
+<footer>Made with 💖 by <span>Hream COD</span> · Fully Automatic · No Human Needed!</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚠️ PASTE YOUR GROQ API KEY BELOW (between the quotes)
+  var GROQ_API_KEY = "PASTE_YOUR_KEY_HERE";
+
+  var selectedCategory = null;
+  var generatedCode = '';
+
+  var categories = [
+    { id: 'app',      icon: '📱', label: 'App Dev',       color: '#e11d48', examples: ['Calculator app','Quiz app','To-do list','Login screen','Weather app','Expense tracker','Notes app','BMI calculator'] },
+    { id: 'web',      icon: '🌐', label: 'Website',       color: '#7c3aed', examples: ['Portfolio website','Restaurant page','Blog homepage','Wedding invitation','Resume website','Gym website','Countdown timer','News website'] },
+    { id: 'game',     icon: '🎮', label: 'Game Dev',      color: '#0891b2', examples: ['Snake game','Tic tac toe','Memory card game','Rock paper scissors','Whack a mole','Ping pong game'] },
+    { id: 'ai',       icon: '🤖', label: 'AI & ML',       color: '#6d28d9', examples: ['Chatbot','Sentiment analysis','Spam detector','Price predictor','Image classifier'] },
+    { id: 'android',  icon: '📲', label: 'Android',       color: '#3d8b00', examples: ['Android calculator','Android to-do','Android quiz','Android login','Android weather'] },
+    { id: 'flutter',  icon: '💙', label: 'Flutter',       color: '#0468d7', examples: ['Flutter calculator','Flutter login UI','Flutter todo','Flutter weather','Flutter e-commerce UI'] },
+    { id: 'python',   icon: '🐍', label: 'Python',        color: '#306998', examples: ['Python calculator','Web scraper','File organizer','Password manager','Number guessing game'] },
+    { id: 'data',     icon: '📊', label: 'Data Science',  color: '#0284c7', examples: ['Data visualization','CSV analyzer','Sales dashboard','Stock price chart','Weather data chart'] },
+    { id: 'database', icon: '🗄️', label: 'Database',      color: '#f59e0b', examples: ['Student database','Employee management','Library system','Inventory system'] },
+    { id: 'security', icon: '🔒', label: 'Security',      color: '#dc2626', examples: ['Password strength checker','Password generator','Simple encryption','OTP generator'] },
+    { id: 'cloud',    icon: '☁️', label: 'Cloud & API',   color: '#0ea5e9', examples: ['REST API','Firebase integration','Weather API','Payment gateway'] },
+    { id: 'doubt',    icon: '❓', label: 'Code Doubt',    color: '#ea580c', examples: ['What is a for loop?','What is an API?','Difference == and ===','What is recursion?','What is Python?','What is Flutter?','How to use Firebase?','What is Git?'] },
+  ];
+
+  // Build grid
+  var grid = document.getElementById('category-grid');
+  categories.forEach(function(cat) {
+    var btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.id = 'cat-' + cat.id;
+    btn.innerHTML = '<span class="cat-icon">' + cat.icon + '</span>' + cat.label;
+    btn.onclick = function() { selectCategory(cat.id); };
+    grid.appendChild(btn);
+  });
+
+  function selectCategory(id) {
+    selectedCategory = id;
+    var cat = categories.find(function(c) { return c.id === id; });
+
+    // Reset all buttons
+    categories.forEach(function(c) {
+      var b = document.getElementById('cat-' + c.id);
+      b.classList.remove('active');
+      b.style.background = 'white';
+      b.style.color = '#111';
+    });
+
+    // Highlight selected
+    var sel = document.getElementById('cat-' + id);
+    sel.classList.add('active');
+    sel.style.background = cat.color;
+
+    // Render chips
+    var chips = document.getElementById('chips');
+    chips.innerHTML = '';
+    cat.examples.forEach(function(ex) {
+      var btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.textContent = ex;
+      btn.style.borderColor = cat.color;
+      btn.style.color = cat.color;
+      btn.onclick = function() { document.getElementById('user-input').value = ex; };
+      chips.appendChild(btn);
+    });
+
+    // Update form
+    document.getElementById('form-label').textContent = cat.icon + ' Describe your ' + cat.label + ' request';
+    document.getElementById('form-label').style.color = cat.color;
+    document.getElementById('user-input').value = '';
+    document.getElementById('output-section').style.display = 'none';
+    document.getElementById('error-box').style.display = 'none';
+
+    document.getElementById('examples-section').style.display = 'block';
+    document.getElementById('form-card').style.display = 'block';
+    document.getElementById('form-card').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  async function generate() {
+    var input = document.getElementById('user-input').value.trim();
+    var errorBox = document.getElementById('error-box');
+    var cat = categories.find(function(c) { return c.id === selectedCategory; });
+
+    if (!input) { errorBox.textContent = '✏️ Please describe what you want!'; errorBox.style.display = 'block'; return; }
+    errorBox.style.display = 'none';
+
+    // Build prompt
+    var prompts = {
+      app:      'You are an expert app developer. Generate complete working code for this app: "' + input + '". Choose the best language/framework. Add helpful comments. Output ONLY the code.',
+      web:      'You are an expert web developer. Generate complete working HTML+CSS+JS single file code for this website: "' + input + '". Make it beautiful and responsive. Output ONLY the code.',
+      game:     'You are an expert game developer. Generate complete working code for this game: "' + input + '". Use HTML+CSS+JS. Output ONLY the code.',
+      ai:       'You are an expert AI/ML developer. Generate complete working Python code for this AI project: "' + input + '". Add helpful comments. Output ONLY the code.',
+      android:  'You are an expert Android developer. Generate complete working Kotlin code for this Android app: "' + input + '". Add helpful comments. Output ONLY the code.',
+      flutter:  'You are an expert Flutter developer. Generate complete working Dart/Flutter code for this app: "' + input + '". Add helpful comments. Output ONLY the code.',
+      python:   'You are an expert Python developer. Generate complete working Python code for: "' + input + '". Add helpful comments. Output ONLY the code.',
+      data:     'You are an expert data scientist. Generate complete working Python code for this data science project: "' + input + '". Add helpful comments. Output ONLY the code.',
+      database: 'You are an expert database developer. Generate complete working SQL/database code for: "' + input + '". Add helpful comments. Output ONLY the code.',
+      security: 'You are an expert cybersecurity developer. Generate complete working code for: "' + input + '". Add helpful comments. Output ONLY the code.',
+      cloud:    'You are an expert cloud/API developer. Generate complete working code for: "' + input + '". Add helpful comments. Output ONLY the code.',
+      doubt:    'You are a friendly coding teacher. Answer this coding question clearly with simple examples and code snippets: "' + input + '". Be beginner-friendly.',
+    };
+
+    var prompt = prompts[selectedCategory] || prompts.doubt;
+
+    // Show loading
+    document.getElementById('gen-btn').disabled = true;
+    document.getElementById('gen-btn').textContent = '⏳ Generating...';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('output-section').style.display = 'none';
+
+    try {
+      var response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + GROQ_API_KEY
+        },
+        body: JSON.stringify({
+          model: 'llama3-70b-8192',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 2048,
+          temperature: 0.7
+        })
+      });
+
+      var data = await response.json();
+
+      if (data.choices && data.choices[0]) {
+        generatedCode = data.choices[0].message.content;
+        document.getElementById('code-output').textContent = generatedCode;
+        document.getElementById('output-section').style.display = 'block';
+        document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
+      } else {
+        errorBox.textContent = '❌ Something went wrong. Please try again!';
+        errorBox.style.display = 'block';
+      }
+
+    } catch(err) {
+      errorBox.textContent = '❌ Check your internet and try again!';
+      errorBox.style.display = 'block';
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('gen-btn').disabled = false;
+    document.getElementById('gen-btn').textContent = '✨ Generate Code Instantly';
+  }
+
+  function copyCode() {
+    navigator.clipboard.writeText(generatedCode);
+    showToast('📋 Copied!');
+  }
+
+  function downloadCode() {
+    var ext = selectedCategory === 'web' || selectedCategory === 'game' ? 'html' : selectedCategory === 'python' || selectedCategory === 'ai' || selectedCategory === 'data' ? 'py' : 'txt';
+    var blob = new Blob([generatedCode], { type: 'text/plain' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'hream-cod.' + ext;
+    a.click();
+    showToast('⬇️ Downloaded!');
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    setTimeout(function() { t.style.display = 'none'; }, 2500);
+  }
+</script>
+</body>
+</html>
